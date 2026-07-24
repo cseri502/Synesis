@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "09Bu37zJLu4=",
+  "success": true,
+  "projectFilePath": "/home/cseri502/Documents/GitHub/Synesis/src/Synesis.Core/Synesis.Core.csproj",
+  "expectedPackageFiles": [
+    "/home/cseri502/.nuget/packages/system.numerics.tensors/10.0.10/system.numerics.tensors.10.0.10.nupkg.sha512"
+  ],
+  "logs": []
+}

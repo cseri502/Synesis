@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Synesis.Core/Synesis.Core.csproj" />
+  </Folder>
+  <Folder Name="/src/Synesis.Demos/">
+    <Project Path="src/Synesis.Demos/XorDemo/XorDemo.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Synesis.Core.Tests/Synesis.Core.Tests.csproj" />
+  </Folder>
+</Solution>
