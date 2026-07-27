@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("XorDemo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb0db179cb4b66368915538a6f23455e328ff994")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9598e59cc5f1a30b4b72e24dc947cff9cb39ed2c")]
 [assembly: System.Reflection.AssemblyProductAttribute("XorDemo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("XorDemo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

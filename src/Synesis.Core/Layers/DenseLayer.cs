@@ -18,7 +18,7 @@ public sealed class DenseLayer : ILayer
     private readonly float[] _weightGradients;
     private readonly float[] _biasGradients;
 
-    public DenseLayer(int inputSize, int outputSize, IWeightInitializer initializer)
+    public DenseLayer(int inputSize, int outputSize, IWeightInitializer initializer, Random? random = null)
     {
         _inputSize = inputSize;
         _outputSize = outputSize;
@@ -28,7 +28,7 @@ public sealed class DenseLayer : ILayer
         _weightGradients = new float[_weights.Length];
         _biasGradients = new float[_bias.Length];
         
-        initializer.Initialize(_weights, fanIn: inputSize, fanOut: outputSize);
+        initializer.Initialize(_weights, fanIn: inputSize, fanOut: outputSize, random ?? Random.Shared);
     }
 
     public Tensor<float> Forward(Tensor<float> input, bool isTraining)
