@@ -9,7 +9,8 @@ public sealed class Sigmoid : IActivationFunction
     public Tensor<float> Derivative(Tensor<float> input)
     {
         var s = Tensor.Sigmoid(input.AsReadOnlyTensorSpan());
-        var one = Tensor.Create<float>([1f], []);
-        return Tensor.Multiply<float>(s, Tensor.Subtract<float>(one, s));
+        var diff = Tensor.Subtract(1f, s.AsReadOnlyTensorSpan());
+        
+        return Tensor.Multiply(s.AsReadOnlyTensorSpan(), diff.AsReadOnlyTensorSpan());
     }
 }

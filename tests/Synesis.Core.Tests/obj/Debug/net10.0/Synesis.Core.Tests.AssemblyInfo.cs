@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Synesis.Core.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9598e59cc5f1a30b4b72e24dc947cff9cb39ed2c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+16185fbe4733d3dabe88f94c616c81a91bb9df9e")]
 [assembly: System.Reflection.AssemblyProductAttribute("Synesis.Core.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Synesis.Core.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
