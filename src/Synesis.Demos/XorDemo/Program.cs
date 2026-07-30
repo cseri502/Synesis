@@ -30,7 +30,7 @@ var xorTargets = Tensor.Create<float>(xorTargetData, [(nint)4, (nint)1]);
 var net = new NeuralNetwork(
     new MeanSquaredError(), new SGD(learningRate: 0.5f, momentum: 0.9f))
     .AddLayer(new DenseLayer(inputSize: 2, outputSize: 4, new XavierInitializer(), random))
-    .AddLayer(new ActivationLayer(new Tanh()))
+    .AddLayer(new ActivationLayer(new SiLU()))
     .AddLayer(new DenseLayer(inputSize: 4, outputSize: 1,  new XavierInitializer(), random))
     .AddLayer(new ActivationLayer(new Sigmoid()));
     
