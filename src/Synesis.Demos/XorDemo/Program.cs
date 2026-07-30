@@ -28,7 +28,7 @@ var xorInputs  = Tensor.Create<float>(xorInputData,  [(nint)4, (nint)2]);
 var xorTargets = Tensor.Create<float>(xorTargetData, [(nint)4, (nint)1]);
 
 var net = new NeuralNetwork(
-    new MeanSquaredError(), new SGD(learningRate: 0.5f, momentum: 0.9f))
+    new MeanSquaredError(), new Adam(learningRate: 0.01f))
     .AddLayer(new DenseLayer(inputSize: 2, outputSize: 4, new XavierInitializer(), random))
     .AddLayer(new ActivationLayer(new SiLU()))
     .AddLayer(new DenseLayer(inputSize: 4, outputSize: 1,  new XavierInitializer(), random))
@@ -41,7 +41,7 @@ net.EpochCompleted += (epoch, loss) =>
         Console.WriteLine($"Epoch {epoch,5} | Loss: {loss:F6}");
 };
 
-var history = net.Train(xorInputs, xorTargets, epochs: 1000, batchSize: 4, random: random);
+var history = net.Train(xorInputs, xorTargets, epochs: 2000, batchSize: 4, random: random);
 
 Console.WriteLine($"Loss: {history.Records[^1].Loss:F6}");
 
