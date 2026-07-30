@@ -10,6 +10,8 @@ public sealed class NeuralNetwork
     private readonly List<ILayer> _layers = new();
     private readonly ILossFunction _loss;
     private readonly IOptimizer _optimizer;
+    
+    public event Action<int, float>? EpochCompleted;
 
     public NeuralNetwork(ILossFunction loss, IOptimizer optimizer)
     {
@@ -83,7 +85,10 @@ public sealed class NeuralNetwork
                     layer.UpdateParameters(_optimizer);
             }
             
-            history.RecordEpoch(epoch, epochLossSum / batchCount);
+            float avgLoss = epochLossSum / batchCount;
+            history.RecordEpoch(epoch, avgLoss);
+            
+            EpochCompleted?.Invoke(epoch, avgLoss);
         }
         
         return history;
