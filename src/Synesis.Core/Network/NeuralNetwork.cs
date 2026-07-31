@@ -1,4 +1,5 @@
 using System.Numerics.Tensors;
+using Synesis.Core.Activations;
 using Synesis.Core.Layers;
 using Synesis.Core.Losses;
 using Synesis.Core.Optimizers;
@@ -10,14 +11,16 @@ public sealed class NeuralNetwork
     private readonly List<ILayer> _layers = [];
     private readonly ILossFunction _loss;
     private readonly IOptimizer _optimizer;
+    private readonly IActivationFunction? _predictionActivation;
     
     public event Action<int, float>? EpochCompleted;
     public IReadOnlyList<ILayer> Layers => _layers;
 
-    public NeuralNetwork(ILossFunction loss, IOptimizer optimizer)
+    public NeuralNetwork(ILossFunction loss, IOptimizer optimizer, IActivationFunction? predictionActivation = null)
     {
         _loss = loss;
         _optimizer = optimizer;
+        _predictionActivation = predictionActivation;
     }
 
     public NeuralNetwork AddLayer(ILayer layer)
@@ -33,7 +36,7 @@ public sealed class NeuralNetwork
         foreach (var layer in _layers)
             current = layer.Forward(current, isTraining: false);
         
-        return current;
+        return _predictionActivation is null ? current : _predictionActivation.Forward(current);
     }
 
     public TrainingHistory Train(Tensor<float> inputs, Tensor<float> targets, int epochs, int batchSize,
