@@ -7,11 +7,12 @@ namespace Synesis.Core.Network;
 
 public sealed class NeuralNetwork
 {
-    private readonly List<ILayer> _layers = new();
+    private readonly List<ILayer> _layers = [];
     private readonly ILossFunction _loss;
     private readonly IOptimizer _optimizer;
     
     public event Action<int, float>? EpochCompleted;
+    public IReadOnlyList<ILayer> Layers => _layers;
 
     public NeuralNetwork(ILossFunction loss, IOptimizer optimizer)
     {

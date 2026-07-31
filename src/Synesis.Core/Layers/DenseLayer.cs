@@ -4,7 +4,7 @@ using Synesis.Core.Optimizers;
 
 namespace Synesis.Core.Layers;
 
-public sealed class DenseLayer : ILayer
+public sealed class DenseLayer : ILayer, IParameterizedLayer
 {
     private readonly int _inputSize;
     private readonly int _outputSize;
@@ -95,5 +95,26 @@ public sealed class DenseLayer : ILayer
     {
         optimizer.Update(_weights, _weightGradients);
         optimizer.Update(_bias, _biasGradients);
+    }
+
+    public IEnumerable<(string Name, float[] Values)> GetParameters()
+    {
+        yield return ("weights", _weights);
+        yield return ("bias", _bias);
+    }
+
+    public void SetParameters(IReadOnlyDictionary<string, float[]> parameters)
+    {
+        CopyIfMatches(parameters["weights"], _weights);
+        CopyIfMatches(parameters["bias"], _bias);
+    }
+    
+    private static void CopyIfMatches(float[] source, float[] destination)
+    {
+        if (source.Length != destination.Length)
+            throw new InvalidOperationException(
+                $"The weight array size does not match. (expected: {destination.Length}, got: {source.Length})");
+
+        source.CopyTo(destination, 0);
     }
 }
