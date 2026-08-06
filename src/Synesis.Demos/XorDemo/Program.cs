@@ -31,7 +31,7 @@ var xorTargets = Tensor.Create<float>(xorTargetData, [(nint)4, (nint)1]);
 const string modelPath = "xor-model.json";
 
 var net = new NeuralNetwork(
-        new MeanSquaredError(), new Adam(learningRate: 0.01f))
+        new BinaryCrossEntropyLoss(), new Adam(learningRate: 0.01f))
     .AddLayer(new DenseLayer(inputSize: 2, outputSize: 4, new XavierInitializer(), random))
     .AddLayer(new ActivationLayer(new SiLU()))
     .AddLayer(new DenseLayer(inputSize: 4, outputSize: 1, new XavierInitializer(), random))
@@ -51,7 +51,7 @@ if (File.Exists(modelPath))
 }
 else
 {
-    var history = net.Train(xorInputs, xorTargets, epochs: 2000, batchSize: 4, random: random);
+    var history = net.Train(xorInputs, xorTargets, epochs: 1000, batchSize: 4, random: random);
     Console.WriteLine($"Loss: {history.Records[^1].Loss:F6}");
 
     ModelSerializer.Save(net, modelPath);
