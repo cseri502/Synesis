@@ -8,34 +8,74 @@ public sealed class SoftmaxCrossEntropyLoss : ILossFunction
 
     public float Compute(Tensor<float> logits, Tensor<float> targets)
     {
-        var probabilities = Tensor.SoftMax<float>(logits.AsReadOnlyTensorSpan());
-        
-        return CrossEntropy(probabilities, targets);
+        int batchSize = (int)logits.Lengths[0];
+        int classCount = (int)logits.Lengths[1];
+
+        var logitsFlat = new float[batchSize * classCount];
+        var targetsFlat = new float[batchSize * classCount];
+        logits.FlattenTo(logitsFlat);
+        targets.FlattenTo(targetsFlat);
+
+        float totalLoss = 0f;
+
+        for (int b = 0; b < batchSize; b++)
+        {
+            int offset = b * classCount;
+            
+            float maxLogit = float.NegativeInfinity;
+            for (int c = 0; c < classCount; c++)
+                if (logitsFlat[offset + c] > maxLogit) maxLogit = logitsFlat[offset + c];
+
+            float sumExp = 0f;
+            for (int c = 0; c < classCount; c++)
+                sumExp += MathF.Exp(logitsFlat[offset + c] - maxLogit);
+
+            for (int c = 0; c < classCount; c++)
+            {
+                float prob = MathF.Exp(logitsFlat[offset + c] - maxLogit) / sumExp;
+                float target = targetsFlat[offset + c];
+                totalLoss -= target * MathF.Log(prob + Epsilon);
+            }
+        }
+
+        return totalLoss / batchSize;
     }
 
     public Tensor<float> Gradient(Tensor<float> logits, Tensor<float> targets)
     {
-        var probabilities = Tensor.SoftMax<float>(logits.AsReadOnlyTensorSpan());
         int batchSize = (int)logits.Lengths[0];
-        
-        var diff = Tensor.Subtract<float>(probabilities.AsReadOnlyTensorSpan(), targets.AsReadOnlyTensorSpan());
-        return Tensor.Multiply<float>(diff.AsReadOnlyTensorSpan(), 1f / batchSize);
-    }
+        int classCount = (int)logits.Lengths[1];
 
-    private static float CrossEntropy(Tensor<float> probabilities, Tensor<float> targets)
-    {
-        int batchSize = (int)probabilities.Lengths[0];
-        int classCount = (int)probabilities.Lengths[1];
+        var logitsFlat = new float[batchSize * classCount];
+        var targetsFlat = new float[batchSize * classCount];
+        logits.FlattenTo(logitsFlat);
+        targets.FlattenTo(targetsFlat);
 
-        var probFlat = new float[batchSize * classCount];
-        var targetFlat = new float[batchSize * classCount];
-        probabilities.FlattenTo(probFlat);
-        targets.FlattenTo(targetFlat);
+        var gradFlat = new float[batchSize * classCount];
+        float invBatch = 1f / batchSize;
 
-        float sum = 0f;
-        for (int i = 0; i < probFlat.Length; i++)
-            sum -= targetFlat[i] * MathF.Log(probFlat[i] + Epsilon);
+        for (int b = 0; b < batchSize; b++)
+        {
+            int offset = b * classCount;
 
-        return sum / batchSize;
+            float maxLogit = float.NegativeInfinity;
+            for (int c = 0; c < classCount; c++)
+                if (logitsFlat[offset + c] > maxLogit) maxLogit = logitsFlat[offset + c];
+
+            float sumExp = 0f;
+            for (int c = 0; c < classCount; c++)
+                sumExp += MathF.Exp(logitsFlat[offset + c] - maxLogit);
+
+            for (int c = 0; c < classCount; c++)
+            {
+                float prob = MathF.Exp(logitsFlat[offset + c] - maxLogit) / sumExp;
+                float target = targetsFlat[offset + c];
+                
+                // dL/dz = (p - y) / BatchSize
+                gradFlat[offset + c] = (prob - target) * invBatch;
+            }
+        }
+
+        return Tensor.Create(gradFlat, logits.Lengths);
     }
 }
