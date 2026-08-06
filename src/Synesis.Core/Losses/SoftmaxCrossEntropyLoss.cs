@@ -2,7 +2,7 @@ using System.Numerics.Tensors;
 
 namespace Synesis.Core.Losses;
 
-public class SoftmaxCrossEntropyLoss : ILossFunction
+public sealed class SoftmaxCrossEntropyLoss : ILossFunction
 {
     private const float Epsilon = 1e-7f;
 
