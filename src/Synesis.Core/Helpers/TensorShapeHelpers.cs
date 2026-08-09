@@ -1,6 +1,6 @@
 namespace Synesis.Core.Helpers;
 
-public class TensorShapeHelpers
+internal static class TensorShapeHelpers
 {
     public static int ElementCount(ReadOnlySpan<nint> lengths)
     {

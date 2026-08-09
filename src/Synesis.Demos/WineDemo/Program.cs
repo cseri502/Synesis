@@ -35,6 +35,7 @@ var net = new NeuralNetwork(
     .AddLayer(new ActivationLayer(new SiLU()))
     .AddLayer(new DenseLayer(inputSize: 16, outputSize: 8, new XavierInitializer(), random))
     .AddLayer(new ActivationLayer(new SiLU()))
+    .AddLayer(new DropoutLayer(dropRate: 0.2f, random))
     .AddLayer(new DenseLayer(inputSize: 8, outputSize: 3, new XavierInitializer(), random));
 
 const int logEvery = 50;
