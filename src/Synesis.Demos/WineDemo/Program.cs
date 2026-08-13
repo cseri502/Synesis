@@ -1,4 +1,5 @@
 ﻿using System.Numerics.Tensors;
+using ScottPlot;
 using Synesis.Core.Activations;
 using Synesis.Core.Data;
 using Synesis.Core.Helpers;
@@ -55,3 +56,24 @@ Console.WriteLine($"Teszt pontosság: {testAccuracy:P2}");
 const string modelPath = "wine-model.json";
 ModelSerializer.Save(net, modelPath);
 Console.WriteLine($"Modell elmentve: {modelPath}");
+
+var epochs = history.Records.Select(r => (double)r.Epoch).ToArray();
+var losses = history.Records.Select(r => (double)r.Loss).ToArray();
+
+Plot myPlot = new();
+
+var scatter = myPlot.Add.Scatter(epochs, losses);
+scatter.LineWidth = 2;
+scatter.Color = Colors.RoyalBlue;
+scatter.MarkerSize = 0;
+
+myPlot.Title("Training Loss");
+myPlot.XLabel("Epoch");
+myPlot.YLabel("Loss");
+
+myPlot.Axes.SetLimitsX(0, epochs.Length);
+myPlot.Axes.SetLimitsY(0, losses.Max() * 1.05);
+
+const string plotPath = "loss_curve.png";
+myPlot.SavePng(plotPath, width: 800, height: 450);
+Console.WriteLine($"Tanulási görbe elmentve: {plotPath}");
